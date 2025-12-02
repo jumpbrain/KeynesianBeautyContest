@@ -15,4 +15,3 @@ pymongo
 numpy
 scipy
 trueskill
-groq
