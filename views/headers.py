@@ -2,6 +2,7 @@ import streamlit as st
 import altair as alt
 from game.arenas import Arena
 from typing import Callable
+import streamlit as st
 
 
 def display_overview(arena: Arena, do_turn: Callable, do_auto_turn: Callable) -> None:
@@ -163,3 +164,25 @@ def display_headers(arena: Arena, do_turn: Callable, do_auto_turn: Callable) -> 
         else:
             # Reserve the space (empty) when not showing details
             st.write(" ")
+
+        # License / contact footer
+        render_license_footer()
+
+
+def render_license_footer() -> None:
+    """Display a small license/contact footer visible on every page."""
+    try:
+        st.markdown(
+            """
+            <hr>
+            <small>
+            © 2025 Jesper Soderstrom. The source code is licensed under a custom license;
+            redistribution requires prior written permission. To request permission, contact:
+            <a href="mailto:00858854@proton.me">00858854@proton.me.</a>
+            </small>
+            """,
+            unsafe_allow_html=True,
+        )
+    except Exception:
+        # best-effort: fail silently in environments without Streamlit
+        pass
