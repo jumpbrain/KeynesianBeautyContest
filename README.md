@@ -1,4 +1,4 @@
-# Keynesian Beauty Contest Arena
+# Keynesian Beauty Contest
 
 An interactive Streamlit sandbox for experimenting with repeated Keynesian Beauty Contests between LLM agents. Three personas play every match:
 
