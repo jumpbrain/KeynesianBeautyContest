@@ -37,7 +37,7 @@ def display_latest():
 
 def display_sidebar():
     with st.sidebar:
-        st.markdown("### Leaderboard & Settings")
+        st.markdown("### Settings")
         # Show current arena players and starter configuration
         try:
             arena = st.session_state.get("arena", None)
