@@ -11,10 +11,8 @@ The UI exposes temperature controls, starter policies (random or manual), turn-b
 ## Features
 
 - Streamlit interface with one-click `Run Turn`, `Run Simulation`, and `Restart` controls.
-- Player-specific colors on the cumulative score chart with integer turn ticks.
 - Sidebar controls for randomized or manual starters plus per-agent temperatures.
-- Automatic per-turn logging to `data/moves.csv` (created on demand) for post-game analysis.
-- Prompt templates tailored to each persona so behaviour stays aligned during multi-round play.
+- Player-specific colors on the cumulative score chart.
 
 ## Prerequisites
 
