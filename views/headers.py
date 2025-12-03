@@ -18,7 +18,7 @@ def display_overview(arena: Arena, do_turn: Callable, do_auto_turn: Callable) ->
         unsafe_allow_html=True,
     )
     st.markdown(
-        """<p style='text-align: center;'> From embedded app (use ctrl + click): <a href='https://www.youtube.com/watch?v=j8ZVkVjDPxo' target='_blank'>Watch Keynes Beauty Contest explainer</a></p>""",
+        """<p style='text-align: center;'> (From embedded app use ctrl + click): <a href='https://www.youtube.com/watch?v=j8ZVkVjDPxo' target='_blank'>Watch Keynes Beauty Contest explainer</a></p>""",
         unsafe_allow_html=True,
     )
 
