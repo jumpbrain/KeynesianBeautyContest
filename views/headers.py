@@ -69,7 +69,7 @@ def display_details(header_container: st.container) -> None:
     with header_container:
         st.write("  \n")
         st.write(
-            """###### Keynes Beauty Contest rules:
+            """###### Rules:
     - Each player chooses a number between 0 and 100 (decimals allowed).
     - Target = 2/3 times the average guess amongst players (being closest earns the largest score increase).
     - Public message is optional.
