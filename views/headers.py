@@ -14,7 +14,7 @@ def display_overview(arena: Arena, do_turn: Callable, do_auto_turn: Callable) ->
     """
     # Remove global product title; show a short thesis explanation instead
     st.markdown(
-        """<p style='text-align: center;'>This app is part of a thesis proposal. It runs a repeated Keynes Beauty Contest featuring a naive vanilla baseline, a k-level strategic planner, and an offensive agressor. Open the sidebar for settings (temperature and starting positions). The reasoning process of each player can be found under internals below!</p>""",
+        """<p style='text-align: center;'>This app is part of a thesis proposal. It runs a repeated Keynes Beauty Contest featuring a vanilla (naive) baseline large language model (llm), a k-level strategic llm, and an offensive agressor llm. Open the sidebar for settings (temperature and starting positions). The reasoning process of each player can be found under internals below!</p>""",
         unsafe_allow_html=True,
     )
     st.markdown(
