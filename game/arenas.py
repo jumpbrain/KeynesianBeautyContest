@@ -217,6 +217,27 @@ class Arena:
             d[player.name] = series[:11]
         return pd.DataFrame(data=d, index=range(11))
 
+    def guess_history(self) -> pd.DataFrame:
+        """Return per-turn guesses and targets for each player for visualization."""
+        rows = []
+        for player in self.players:
+            for record in player.records:
+                rows.append(
+                    {
+                        "Turn": record.turn,
+                        "Player": player.name,
+                        "Guess": record.applied_guess if record.applied_guess is not None else math.nan,
+                        "Target": record.target_value if record.target_value is not None else math.nan,
+                    }
+                )
+
+        if not rows:
+            return pd.DataFrame(columns=["Turn", "Player", "Guess", "Target"])
+
+        df = pd.DataFrame(rows)
+        df = df.sort_values(["Turn", "Player"]).reset_index(drop=True)
+        return df
+
     @staticmethod
     def rankings() -> pd.DataFrame:
         """

@@ -1,8 +1,8 @@
 import streamlit as st
 import altair as alt
+import pandas as pd
 from game.arenas import Arena
 from typing import Callable
-import streamlit as st
 
 
 def display_overview(arena: Arena, do_turn: Callable, do_auto_turn: Callable) -> None:
@@ -88,11 +88,17 @@ def display_chart(arena: Arena, header_container: st.container):
         df = arena.table().reset_index().rename(columns={"index": "Turn"})
         long_df = df.melt(id_vars="Turn", var_name="Player", value_name="Score")
 
+        # Only show completed rounds (1-10). Turn 0 is the initial state with no info.
+        long_df = long_df[long_df["Turn"] >= 1]
+
         if not long_df.empty:
             long_df["Turn"] = long_df["Turn"].round().astype(int)
-            turn_ticks = sorted({int(turn) for turn in long_df["Turn"].unique()})
         else:
-            turn_ticks = []
+            long_df["Turn"] = pd.Series(dtype=int)
+
+        total_turns = 10
+        axis_values = list(range(1, total_turns + 1))
+        x_scale = alt.Scale(domain=[1, total_turns])
 
         color_lookup = {
             "Vanilla": "#778899",
@@ -109,15 +115,14 @@ def display_chart(arena: Arena, header_container: st.container):
             "title": "Turn",
             "format": "d",
             "tickMinStep": 1,
+            "values": axis_values,
         }
-        if turn_ticks:
-            axis_kwargs["values"] = turn_ticks
 
         chart = (
             alt.Chart(long_df)
-            .mark_line()
+            .mark_line(point=True)
             .encode(
-                x=alt.X("Turn:Q", axis=alt.Axis(**axis_kwargs)),
+                x=alt.X("Turn:Q", axis=alt.Axis(**axis_kwargs), scale=x_scale),
                 y=alt.Y("Score:Q", axis=alt.Axis(title="Cumulative score")),
                 color=alt.Color(
                     "Player:N",
@@ -128,6 +133,77 @@ def display_chart(arena: Arena, header_container: st.container):
                     alt.Tooltip("Turn:Q", title="Turn"),
                     alt.Tooltip("Player:N", title="Player"),
                     alt.Tooltip("Score:Q", title="Score", format=".2f"),
+                ],
+            )
+            .properties(height=280)
+        )
+
+        st.altair_chart(chart, width="stretch")
+
+
+def display_guess_chart(arena: Arena, header_container: st.container) -> None:
+    """Show guesses per player alongside the target for each completed turn."""
+    with header_container:
+        guess_df = arena.guess_history()
+        if guess_df.empty:
+            st.info("Run at least one turn to see guess history.")
+            return
+
+        guess_df["Turn"] = guess_df["Turn"].astype(int)
+        total_turns = 10
+        axis_values = list(range(1, total_turns + 1))
+
+        # Prepare combined dataset with per-player guesses plus the shared target line
+        target_rows = (
+            guess_df.dropna(subset=["Target"])
+            .drop_duplicates(subset=["Turn"], keep="last")
+            .assign(Player="Target (0.7 × mean)", Guess=lambda df: df["Target"])
+        )
+        target_rows["Target"] = target_rows["Guess"]
+
+        combined = (
+            pd.concat([guess_df.copy(), target_rows], ignore_index=True)
+            .rename(columns={"Player": "Series", "Guess": "Value"})
+        )
+
+        target_label = "Target (0.7 × mean)"
+        color_lookup = {
+            "Vanilla": "#778899",
+            "Strategic": "#1f77b4",
+            "Agressor": "#B22222",
+            target_label: "#FFFFFF",
+        }
+        series_order = [s for s in color_lookup.keys() if s in combined["Series"].unique()]
+
+        axis_kwargs = {"title": "Turn", "format": "d", "tickMinStep": 1, "values": axis_values}
+        x_scale = alt.Scale(domain=[1, total_turns])
+
+        chart = (
+            alt.Chart(combined)
+            .mark_line(point=True)
+            .encode(
+                x=alt.X("Turn:Q", axis=alt.Axis(**axis_kwargs), scale=x_scale),
+                y=alt.Y("Value:Q", axis=alt.Axis(title="Guess / Target")),
+                color=alt.Color(
+                    "Series:N",
+                    scale=alt.Scale(domain=series_order, range=[color_lookup[s] for s in series_order]),
+                    legend=alt.Legend(title="Series"),
+                ),
+                strokeDash=alt.condition(
+                    alt.datum.Series == target_label,
+                    alt.value([4, 2]),
+                    alt.value([1, 0]),
+                ),
+                size=alt.condition(
+                    alt.datum.Series == target_label,
+                    alt.value(3),
+                    alt.value(2),
+                ),
+                tooltip=[
+                    alt.Tooltip("Turn:Q", title="Turn"),
+                    alt.Tooltip("Series:N", title="Series"),
+                    alt.Tooltip("Value:Q", title="Value", format=".2f"),
+                    alt.Tooltip("Target:Q", title="Target", format=".2f"),
                 ],
             )
             .properties(height=280)
@@ -148,6 +224,8 @@ def display_headers(arena: Arena, do_turn: Callable, do_auto_turn: Callable) -> 
     header_top = st.container()
     with header_top:
         display_chart(arena, st.container())
+        # Temporarily disable the guess/target chart.
+        # display_guess_chart(arena, st.container())
 
     # Below the chart, show the overview and buttons in a row
     # Use a wider center column so the control console has more horizontal space
