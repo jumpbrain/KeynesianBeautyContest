@@ -120,7 +120,7 @@ def display_chart(arena: Arena, header_container: st.container):
 
         chart = (
             alt.Chart(long_df)
-            .mark_line(point=True)
+            .mark_line(point=alt.OverlayMarkDef(size=85, filled=True))
             .encode(
                 x=alt.X("Turn:Q", axis=alt.Axis(**axis_kwargs), scale=x_scale),
                 y=alt.Y("Score:Q", axis=alt.Axis(title="Cumulative score")),
@@ -180,7 +180,7 @@ def display_guess_chart(arena: Arena, header_container: st.container) -> None:
 
         chart = (
             alt.Chart(combined)
-            .mark_line(point=True)
+            .mark_line(point=alt.OverlayMarkDef(size=140, filled=True))
             .encode(
                 x=alt.X("Turn:Q", axis=alt.Axis(**axis_kwargs), scale=x_scale),
                 y=alt.Y("Value:Q", axis=alt.Axis(title="Guess / Target")),
