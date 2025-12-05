@@ -14,7 +14,7 @@ def display_overview(arena: Arena, do_turn: Callable, do_auto_turn: Callable) ->
     """
     # Remove global product title; show a short thesis explanation instead
     st.markdown(
-        """<p style='text-align: center;'>This app is part of a thesis proposal. It runs a repeated Keynes Beauty Contest featuring a vanilla baseline large language model (llm), a k-level strategic llm and an offensive agressor llm. Open the sidebar for settings (temperature and starting positions). The reasoning process of each player can be found under internals below! As of now the strategic llm is simpy another vanilla llm as the strategic approach is yet to be built.</p>""",
+        """<p style='text-align: center;'>This app is part of a thesis proposal. It runs a repeated Keynes Beauty Contest featuring a vanilla baseline large language model (llm), a k-level strategic llm and an offensive agressor llm. Open the sidebar for settings (temperature and starting positions). The reasoning process of each player can be found under internals below! As of now the strategic llm is simply another vanilla llm with one-shot prompting.</p>""",
         unsafe_allow_html=True,
     )
     st.markdown(
