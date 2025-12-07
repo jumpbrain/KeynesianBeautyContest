@@ -1,42 +1,17 @@
 # Keynesian Beauty Contest
 
-An interactive Streamlit sandbox for experimenting with repeated Keynesian Beauty Contests between LLM agents. Three personas play every match:
+An interactive prototype for experimenting with repeated Keynesian beauty contests between LLM agents. Three LLM's play each match:
 
-- **Vanilla** – a naive baseline that anchors around straightforward best responses.
-- **Strategic** – a k-level reasoner that iteratively anticipates opponents.
-- **Agressor** – a red-team style agent that pushes offensive, high-impact guesses.
-
-The UI exposes temperature controls, starter policies (random or manual), turn-by-turn internals, and live score tracking so you can observe how different prompting strategies evolve over ten rounds.
+- **Vanilla** – a naive baseline.
+- **Strategic** – a recursive (k-level) reasoner that iteratively anticipates opponents moves.
+- **Agressor** – a very offensive player.
 
 ## Features
 
-- Streamlit interface with one-click `Run Turn`, `Run Simulation`, and `Restart` controls.
+- Streamlit interface with one-click run controls.
 - Sidebar controls for randomized or manual starters plus per-agent temperatures.
-- Player-specific colors on the cumulative score chart.
-
-## Prerequisites
-
-- Python 3.11
-- Streamlit-compatible API keys (e.g., OpenAI) configured as environment variables before launching the app.
-
-You can store credentials in a local `.env` file (kept out of version control) with values such as:
-
-```
-OPENAI_API_KEY="..."
-```
-
-## Quick Start
-
-```powershell
-git clone <your repo url>
-cd beauty
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-python -m streamlit run app.py
-```
-
-Open the local Streamlit URL provided in the terminal. The default session randomizes the starting player each round; toggle the sidebar to pick a manual starter if you need deterministic ordering.
+- Cumulative score chart.
+- Model as a judge eval and summary of each round.
 
 ## Project Layout
 
@@ -45,14 +20,12 @@ Open the local Streamlit URL provided in the terminal. The default session rando
 - `game/` – Arena orchestration, players, and referee logic.
 - `prompting/` – System and user prompt templates for each persona.
 - `models/` – Pydantic models and CSV/Mongo storage adapters.
-- `tools/` – Maintenance utilities such as the moves tidy script.
-- `data/` – Created automatically to hold move logs (`moves.csv`).
-
+- `tools/` – Maintenance utilities (e.g moves tidy script).
+- `data/` – Created to hold move logs (`moves.csv`).
 
 ## Acknowledgements
 
 Inspired by Edward Donner's Outsmart arena. This sandbox is built on the same idea of competitive LLM play. 
-
 
 ## License
 
